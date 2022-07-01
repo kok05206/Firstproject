@@ -42,7 +42,7 @@ public class ArticleController {
         // System.out.println(saved.toString());
         log.info(saved.toString()); // 마찬가지!!
 
-        return "";
+        return "redirect:/articles/" + saved.getId();
     }
     @GetMapping("/articles/{id}")
     public String show(@PathVariable Long id, Model model){
