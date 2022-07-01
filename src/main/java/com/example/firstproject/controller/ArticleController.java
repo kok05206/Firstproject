@@ -6,7 +6,9 @@ import com.example.firstproject.repository.ArticleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -38,5 +40,23 @@ public class ArticleController {
         log.info(saved.toString()); // 마찬가지!!
 
         return "";
+    }
+    @GetMapping("/articles/{id}")
+    public String show(@PathVariable Long id, Model model){
+        log.info("id = " + id);
+
+        // 1. id로 데이터를 가져옴!
+        Article articleEntity = articleRepository.findById(id).orElse(null);
+        // id값을 통해서 찾았는데 만약에 해당 id값이 없다면 null을 반환해라.
+        // id값이 있다면 articleEntity에 해당 id값이 들어가고 없다면 null값이 들어간다.
+        // Optional<Article> articleEntity = articleRepository.findById(id)
+        // articleRepository가 findById로 값을 반환할 때, 그 리턴타입이 Article이 아니다.
+        // 이를 해결하기 위해서 Optional<> 안에 Article을 넣어서 에러를 해결.
+
+        // 2. 가져온 데이터를 모델에 등록!
+        model.addAttribute("article", articleEntity);
+
+        // 3. 보여줄 페이지를 설정!
+        return "articles/show";
     }
 }
