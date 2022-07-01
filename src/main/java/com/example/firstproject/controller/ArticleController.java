@@ -80,4 +80,17 @@ public class ArticleController {
         // 3. 뷰 페이지를 설정한다!
         return "articles/index"; // articles/index.mustache
     }
+
+    @GetMapping("/articles/{id}/edit")
+    public String edit(@PathVariable Long id, Model model){
+        // id를 가져오기 위해 @PathVariable 어노테이션을 사용!
+        // 수정할 데이터를 가져오기!!
+        Article articleEntity = articleRepository.findById(id).orElse(null);
+
+        // 모델에 데이터를 등록!
+        model.addAttribute("article", articleEntity);
+
+        // 뷰 페이지 설정!!
+        return "/articles/edit";
+    }
 }
