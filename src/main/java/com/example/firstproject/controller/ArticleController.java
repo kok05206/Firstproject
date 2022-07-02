@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Slf4j // 로깅을 위한 어노테이션!!
@@ -88,9 +90,30 @@ public class ArticleController {
         Article articleEntity = articleRepository.findById(id).orElse(null);
 
         // 모델에 데이터를 등록!
-        model.addAttribute("article", articleEntity);
+        model.addAttribute("article", articleEntity) ;
 
         // 뷰 페이지 설정!!
         return "/articles/edit";
+    }
+    @PostMapping("/articles/update")
+    public String update(ArticleForm form){
+        log.info(form.toString());
+
+        // 1. DTO -> Entity로 변환한다!
+        Article articleEntity = form.toEntity();
+        log.info(articleEntity.toString());
+
+        // 2. Entity를 DB로 저장한다!
+
+        // 2-1. DB에 기존 데이터를 가져온다!
+        Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
+
+        // 2-2. 기존 데이터에 값을 갱신한다!
+        if (target != null){
+            articleRepository.save(articleEntity); // Entity 가 DB로 갱신된다!
+        }
+
+        // 3. 수정 결과 페이지로 Redirect 한다!
+        return "redirect:/articles/" + articleEntity.getId();
     }
 }
