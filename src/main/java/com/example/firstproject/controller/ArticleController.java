@@ -22,12 +22,14 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @GetMapping("/articles/new")
-    public String newArticleForm(){
+    // @GetMapping : HTTP GET 요청을 특정 핸들러 메소드에 맵핑하기위한 annotation.
+    // 주소에 파라미터가 노출 됨.
+    public String newArticleForm() {
         return "articles/new";
     }
 
     @PostMapping("/articles/create")
-    public String createArticle(ArticleForm form){
+    public String createArticle(ArticleForm form) {
         // 로깅이란 ? --> 서버에서 일어나는 일들을 다 기록할 수 있게 하는것.
         // System.out.println(form.toString()); --> 로깅 기능으로 대체!!
         log.info(form.toString()); // 이렇게!!
@@ -38,14 +40,15 @@ public class ArticleController {
         log.info(article.toString()); // print문을 다 변경이 가능!!
 
         // 2. Repository 에게 Entity를 DB안에 저장하게 함!
-       Article saved  = articleRepository.save(article);
+        Article saved = articleRepository.save(article);
         // System.out.println(saved.toString());
         log.info(saved.toString()); // 마찬가지!!
 
         return "redirect:/articles/" + saved.getId();
     }
+
     @GetMapping("/articles/{id}")
-    public String show(@PathVariable Long id, Model model){
+    public String show(@PathVariable Long id, Model model) {
         log.info("id = " + id);
 
         // 1. id로 데이터를 가져옴!
@@ -64,7 +67,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles")
-    public String index(Model model){
+    public String index(Model model) {
 
         // 1. 모든 Article을 가져온다!
         ArrayList<Article> articleEntityList = articleRepository.findAll(); // 현재 리턴타입이 서로 불일치 해서 에러가 발생.
@@ -82,19 +85,20 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String edit(@PathVariable Long id, Model model){
+    public String edit(@PathVariable Long id, Model model) {
         // id를 가져오기 위해 @PathVariable 어노테이션을 사용!
         // 수정할 데이터를 가져오기!!
         Article articleEntity = articleRepository.findById(id).orElse(null);
 
         // 모델에 데이터를 등록!
-        model.addAttribute("article", articleEntity) ;
+        model.addAttribute("article", articleEntity);
 
         // 뷰 페이지 설정!!
         return "/articles/edit";
     }
+
     @PostMapping("/articles/update")
-    public String update(ArticleForm form){
+    public String update(ArticleForm form) {
         log.info(form.toString());
 
         // 1. DTO -> Entity로 변환한다!
@@ -107,26 +111,27 @@ public class ArticleController {
         Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
 
         // 2-2. 기존 데이터에 값을 갱신한다!
-        if (target != null){
+        if (target != null) {
             articleRepository.save(articleEntity); // Entity 가 DB로 갱신된다!
         }
 
         // 3. 수정 결과 페이지로 Redirect 한다!
         return "redirect:/articles/" + articleEntity.getId();
     }
+
     @GetMapping("/articles/{id}/delete")
-    public String delete(@PathVariable Long id, RedirectAttributes rttr){
+    public String delete(@PathVariable Long id, RedirectAttributes rttr) {
         log.info("삭제 요청이 들어왔습니다!");
 
         // 삭제 처리 개요 3가지.
         // 1. 삭제 대상을 가져온다!
-        Article target  = articleRepository.findById(id).orElse(null);
+        Article target = articleRepository.findById(id).orElse(null);
         log.info(target.toString());
 
         // 2. 대상을 삭제 한다!
-        if(target != null){
+        if (target != null) {
             articleRepository.delete(target);
-            rttr.addFlashAttribute("msg","삭제가 완료되었습니다!");
+            rttr.addFlashAttribute("msg", "삭제가 완료되었습니다!");
         }
 
         // 3. 결과 페이지로 redirect 한다!
