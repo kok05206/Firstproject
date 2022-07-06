@@ -24,4 +24,11 @@ public class Article {
 
     @Column // DB에서 이해할 수 있게끔 선언 해주는 것. , DB에서 관리하는 테이블에 연결하기 위함.
     private String content;
+
+    public void patch(Article article) {
+        if(article.title != null)
+            this.title = article.title;
+        if(article.content != null)
+            this.content = article.content;
+    }
 }
