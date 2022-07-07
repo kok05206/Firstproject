@@ -9,5 +9,4 @@ public class FirstApiController {
     public String hello(){
         return "hello world!";
     }
-
 }
