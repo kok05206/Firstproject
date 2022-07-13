@@ -207,7 +207,6 @@ class CommentRepositoryTest {
 
             // 검증
             assertEquals(expected.toString(), comments.toString(), "i 의 모든 댓글을 출력!");
-
         }
     }
 }
