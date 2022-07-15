@@ -1,8 +1,10 @@
 package com.example.firstproject.controller;
 
 import com.example.firstproject.dto.ArticleForm;
+import com.example.firstproject.dto.CommentDto;
 import com.example.firstproject.entity.Article;
 import com.example.firstproject.repository.ArticleRepository;
+import com.example.firstproject.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,9 @@ public class ArticleController {
 
     @Autowired // 스프링 부트가 미리 생성해놓은 객체를 가져다가 자동으로 연결!
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/articles/new")
     // @GetMapping : HTTP GET 요청을 특정 핸들러 메소드에 맵핑하기위한 annotation.
@@ -58,9 +63,11 @@ public class ArticleController {
         // Optional<Article> articleEntity = articleRepository.findById(id)
         // articleRepository가 findById로 값을 반환할 때, 그 리턴타입이 Article이 아니다.
         // 이를 해결하기 위해서 Optional<> 안에 Article을 넣어서 에러를 해결.
+        List<CommentDto> commentDtos = commentService.comments(id);
 
         // 2. 가져온 데이터를 모델에 등록!
         model.addAttribute("article", articleEntity);
+        model.addAttribute("commentDtos", commentDtos);
 
         // 3. 보여줄 페이지를 설정!
         return "articles/show";
