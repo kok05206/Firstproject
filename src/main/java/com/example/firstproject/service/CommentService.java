@@ -5,6 +5,7 @@ import com.example.firstproject.entity.Article;
 import com.example.firstproject.entity.Comment;
 import com.example.firstproject.repository.ArticleRepository;
 import com.example.firstproject.repository.CommentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class CommentService {
     @Autowired
@@ -42,6 +43,7 @@ public class CommentService {
     }
 
     @Transactional // DB의 변경을 방지하기 위해 선언! , 중간에 문제가 생기면 롤백이 되기때문!
+
     public CommentDto create(Long articleId, CommentDto dto) {
         // 게시글 조회 및 예외 발생
         Article article = articleRepository.findById(articleId)
